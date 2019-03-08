@@ -1,26 +1,60 @@
-# Technical Assignment for Backend
+#Parental Control Service
+##Scenario
+Sky is developing a next generation Video on Demand platform. You are part of a software engineering team, developing  
+services for the platform and working on the story below.
+**Prevent access to movies based on parental control level**
+*As a customer I don’t want my account to be able to access movies that have a higher parental control level than my 
+current preference setting.*
 
-## The task
+Your team has partnered with the Movie Meta Data team that provides a service that can return parental control 
+information for a given movie.
 
-Your task is to develop a small java application. We need you to build your application in your own GitHub repository.  Please do not fork our repository to create your project.  Once you are done, send us a link to your repository.
+##Instructions
+You are required to provide an implementation of a *ParentalControlService*. You may use Java version 6 or above.
+The service should accept as input the customer’s *parental control level preference* and a *movie id*. If the customer 
+is able to watch the movie the *ParentalControlService* should indicate this to the calling client.
 
-Please allow yourself at least 1 hour of uninterrupted time for this task, but feel free to spend as much time on the task as you like and make the solution and the code as perfect as you like.
+Please implement the *ParentalControlService* API.
 
-## The application
+The recommended time to complete this exercise should be between forty-five minutes and one-hour.
 
-Your application needs to read the attached AddressBook file and answer the following questions:
+##Parental Control Levels
+U, PG, 12, 15, 18
+Where U is the least restrictive and 18 is the most restrictive.
 
-1. How many males are in the address book?
-2. Who is the oldest person in the address book?
-3. How many days older is Bill than Paul?
+##Movie Service
+The Movie Meta Data team is currently developing the MovieService getParentalControlLevel call that accepts the 
+*movie id* as an input and returns the parental control level for that movie as a string.
+This is a simple diagram of the interaction between the services:
 
-Some insights into what we'll be looking for (and what we will not):
+![alt text](docs/imgs/ServiceInteraction.jpg)
 
-- Feel free to use any dependency management and build tools eg maven or gradle
-- Please do not use database, we are more interested in your Java skills than your SQL skills
-- Feel free to commit as often as you'd like. The more commits the better! Please commit at least once within the first hour
-- It's better to complete 1 task than to start 3
-- Feel free to use any java libraries you feel appropriate
-- We will be looking at how you approach the task (e.g. how you break it into sub-tasks) and how you structure your code to answer the questions
+###MovieService Interface
+```java
+package com.thirdparty.movie;
 
-Good Luck!
+public interface MovieService {
+    String getParentalControlLevel(String movieId) throws TitleNotFoundException, TechnicalFailureException;
+}
+```
+
+This is a third party interface so you should not change it. The exceptions are checked exceptions.
+
+##Acceptance Criteria
+
+The following table describes the expected ParentalControlService result based on a given MovieService 
+*getParentalControlLevel* response.
+ 
+|MovieService getParentalControlLevel response|Description        |ParentalControlService result                       |
+|---------------------------------------------|-------------------|----------------------------------------------------|
+|Parental Control level                       |A string e.g. “PG” |If the parental control level of the movie is equal to or less than the customer’s preference indicate to the caller that the customer can watch the movie |
+|TitleNotFound exception                      |The movie service could not find the given movie|Indicate the error to the calling client.|
+|Technical failure exception                  |System error       |Indicate that the customer cannot watch this movie  |
+
+We need to ensure that we always failsafe.
+
+##What we look at
+*We are interested in code readability and structure and your use of best practice.
+*Please supply us with your source code in a single archive. The project should be self-contained.
+*The name of the root folder in the archive should contain your full name.
+*Please do not publish your solution in the public domain e.g. GitHub or a blog
